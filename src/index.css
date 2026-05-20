@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0c0f1a;
+    color: #dce6ff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    overflow: hidden;
+    height: 600px;
+    width: 880px;
+  }
+
+  #root {
+    height: 600px;
+    width: 880px;
+    overflow: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+}
+
+@layer components {
+  .toolbar-btn {
+    @apply flex items-center justify-center p-2 rounded-lg
+      transition-all duration-150 text-surface-100/70
+      hover:bg-surface-40/60 hover:text-surface-100
+      active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .toolbar-btn-active {
+    @apply bg-accent-500/20 text-accent-400;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-1.5 bg-surface-20 border border-surface-30
+      rounded-lg text-sm text-surface-100 placeholder-surface-70
+      focus:outline-none focus:ring-1 focus:ring-accent-400
+      focus:border-accent-400/40 transition-all duration-150;
+  }
+
+  .select-field {
+    @apply w-full px-3 py-1.5 bg-surface-20 border border-surface-30
+      rounded-lg text-sm text-surface-100
+      focus:outline-none focus:ring-1 focus:ring-accent-400
+      transition-all appearance-none cursor-pointer;
+  }
+
+  .device-item {
+    @apply flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer
+      transition-all duration-150 text-surface-100/70
+      hover:bg-surface-40/40 hover:text-surface-100;
+  }
+
+  .device-item-active {
+    @apply bg-accent-500/15 text-accent-400 border border-accent-500/30;
+  }
+
+  .btn-primary {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg
+      bg-accent-500 text-white text-sm font-medium
+      hover:bg-accent-400 active:scale-95 transition-all duration-150;
+  }
+
+  .btn-secondary {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg
+      bg-surface-30 text-surface-100 text-sm font-medium border border-surface-40
+      hover:bg-surface-40 active:scale-95 transition-all duration-150;
+  }
+
+  /* Device frame shadows */
+  .device-shadow {
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.55))
+            drop-shadow(0 4px 12px rgba(0,0,0,0.35));
+  }
+}
