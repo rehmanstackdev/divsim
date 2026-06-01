@@ -47,15 +47,142 @@ function BatteryIcon() {
 }
 
 /* ── iOS status bar ──────────────────────────────────────────────── */
-function IOSStatusBar({ color = '#fff', hasNotch }: { color?: string; hasNotch: boolean }) {
+function CompactIOSStatusBar({ height }: { height: number }) {
   const time = useClock();
   return (
     <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height,
+      paddingLeft: 30,
+      paddingRight: 26,
+      color: '#fff',
+      flexShrink: 0,
+      position: 'relative',
+      zIndex: 3,
+      boxSizing: 'border-box',
+      background: '#4f4f4f',
+    }}>
+      <span style={{ fontSize: 15, fontWeight: 700, lineHeight: 1, letterSpacing: 0 }}>{time}</span>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 5,
+        transform: 'scale(0.68)',
+        transformOrigin: 'right center',
+      }}>
+        <SignalIcon />
+        <WifiIcon />
+        <BatteryIcon />
+      </div>
+    </div>
+  );
+}
+
+function AssetSafariTopBar({ url }: { url: string }) {
+  let display = url;
+  try { display = new URL(url).hostname; } catch { /* keep raw */ }
+
+  return (
+    <div style={{
+      height: 42,
+      background: '#fff',
+      padding: '5px 10px 7px',
+      boxSizing: 'border-box',
+      flexShrink: 0,
+      borderBottom: '1px solid #d8d8d8',
+    }}>
+      <div style={{
+        height: 30,
+        background: '#555',
+        borderRadius: 6,
+        color: '#fff',
+        display: 'grid',
+        gridTemplateColumns: '36px 1fr 26px',
+        alignItems: 'center',
+        padding: '0 7px',
+        boxSizing: 'border-box',
+      }}>
+        <span style={{ fontSize: 13, color: '#e5e5e5', fontWeight: 500 }}>AA</span>
+        <span style={{
+          fontSize: 13,
+          color: '#fff',
+          fontWeight: 600,
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" style={{ marginRight: 4, verticalAlign: -1 }}>
+            <rect x="5" y="10" width="14" height="10" rx="2" />
+            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+          </svg>
+          {display}
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e5e5e5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="23 4 23 10 17 10" />
+          <path d="M20.49 15a9 9 0 1 1-.07-8.85" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function AssetSafariBottomBar() {
+  const icons = [
+    <path key="b" d="M15 18l-6-6 6-6" />,
+    <path key="f" d="M9 18l6-6-6-6" />,
+    <><path key="s1" d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline key="s2" points="16 6 12 2 8 6" /><line key="s3" x1="12" y1="2" x2="12" y2="15" /></>,
+    <><path key="b1" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></>,
+    <><rect key="r1" x="8" y="8" width="12" height="12" rx="2" /><rect key="r2" x="4" y="4" width="12" height="12" rx="2" /></>,
+  ];
+
+  return (
+    <div style={{
+      height: 78,
+      background: '#242424',
+      color: '#f5f5f5',
+      flexShrink: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      padding: '11px 15px 9px',
+      boxSizing: 'border-box',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {icons.map((icon, i) => (
+          <svg key={i} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            {icon}
+          </svg>
+        ))}
+      </div>
+      <div style={{ width: 138, height: 4, background: '#000', borderRadius: 4, alignSelf: 'center' }} />
+    </div>
+  );
+}
+
+function IOSStatusBar({
+  color = '#fff',
+  hasNotch,
+  height,
+  paddingTop,
+}: {
+  color?: string;
+  hasNotch: boolean;
+  height?: number;
+  paddingTop?: number;
+}) {
+  const time = useClock();
+  const barHeight = height ?? (hasNotch ? 44 : 28);
+  const topPad = paddingTop ?? (hasNotch ? 12 : 6);
+  return (
+    <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      height: hasNotch ? 44 : 28,
+      height: barHeight,
       paddingLeft: hasNotch ? 28 : 14,
       paddingRight: hasNotch ? 28 : 14,
-      paddingTop: hasNotch ? 12 : 6,
+      paddingTop: topPad,
       color,
       flexShrink: 0,
       position: 'relative',
@@ -340,6 +467,108 @@ function DesktopFrame({ device, viewport, scale }: { device: DevicePreset; viewp
   );
 }
 
+/* ── Image-backed phone frame ─────────────────────────────────────── */
+function AssetPhoneFrame({
+  device,
+  viewport,
+  containerW,
+  containerH,
+  hasNotch,
+  hasDynamicIsland,
+}: {
+  device: DevicePreset;
+  viewport: ViewportState;
+  containerW: number;
+  containerH: number;
+  hasNotch: boolean;
+  hasDynamicIsland: boolean;
+}) {
+  const devW = device.width;
+  const devH = device.height;
+  const STATUS_H = hasNotch || hasDynamicIsland ? 44 : 24;
+  const TOP_SAFARI_H = 42;
+  const BOTTOM_SAFARI_H = 78;
+  const CHROME_H = STATUS_H + TOP_SAFARI_H + BOTTOM_SAFARI_H;
+  const contentH = devH - CHROME_H;
+
+  const screenPx = {
+    left: 118,
+    top: 104,
+    width: 1266,
+  };
+  const screen = {
+    left: screenPx.left / 1502,
+    top: screenPx.top / 2948,
+    width: screenPx.width / 1502,
+    height: (screenPx.width * devH / devW) / 2948,
+  };
+
+  const frameW = devW / screen.width;
+  const frameH = devH / screen.height;
+  const PAD = 40;
+  const scale = Math.min((containerW - PAD) / frameW, (containerH - PAD) / frameH, 1.4);
+  const scaledFrameW = frameW * scale;
+  const scaledFrameH = frameH * scale;
+  const scaledDevW = devW * scale;
+  const scaledDevH = devH * scale;
+
+  return (
+    <div style={{
+      position: 'relative',
+      width: scaledFrameW,
+      height: scaledFrameH,
+      filter: 'drop-shadow(0 30px 80px rgba(0,0,0,0.75)) drop-shadow(0 8px 20px rgba(0,0,0,0.5))',
+    }}>
+      <div style={{
+        position: 'absolute',
+        left: screen.left * scaledFrameW,
+        top: screen.top * scaledFrameH,
+        width: scaledDevW,
+        height: scaledDevH,
+        borderRadius: 36 * scale,
+        overflow: 'hidden',
+        background: 'transparent',
+        zIndex: 1,
+      }}>
+        <div style={{
+          width: devW,
+          height: devH,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#000',
+        }}>
+          <CompactIOSStatusBar height={STATUS_H} />
+          <AssetSafariTopBar url={viewport.url} />
+
+          <div style={{ width: devW, height: contentH, overflow: 'hidden', flexShrink: 0 }}>
+            <SiteIframe url={viewport.url} width={devW} height={contentH} userAgent={device.userAgent} />
+          </div>
+
+          <AssetSafariBottomBar />
+        </div>
+      </div>
+
+      <img
+        src={device.frameAsset}
+        alt=""
+        draggable={false}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'fill',
+          userSelect: 'none',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      />
+    </div>
+  );
+}
+
 /* ── Main PhoneFrame ──────────────────────────────────────────────── */
 export interface PhoneFrameProps {
   device: DevicePreset;
@@ -385,6 +614,18 @@ export default function PhoneFrame({ device, viewport, containerW, containerH }:
   if (isDesktop) {
     const deskScale = Math.min((containerW - PAD) / devW, (containerH - PAD) / devH, 1);
     return <DesktopFrame device={device} viewport={viewport} scale={deskScale} />;
+  }
+  if (device.frameAsset && isIPhone && !viewport.isLandscape) {
+    return (
+      <AssetPhoneFrame
+        device={device}
+        viewport={viewport}
+        containerW={containerW}
+        containerH={containerH}
+        hasNotch={hasNotch}
+        hasDynamicIsland={hasDynamicIsland}
+      />
+    );
   }
 
   const scaledFrameW  = frameW * scale;
