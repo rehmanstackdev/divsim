@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useStore } from '../store/deviceStore';
 import type { DevicePreset, DeviceCategory } from '../types';
-import { DEVICE_PRESETS, CATEGORY_LABELS, CATEGORY_EMOJI } from '../utils/devicePresets';
+import { DEVICE_PRESETS, CATEGORY_LABELS } from '../utils/devicePresets';
 
 /* ── Phone outline SVG ─────────────────────────────────────────────── */
 function PhoneSVG({ category, size = 40 }: { category: DeviceCategory; size?: number }) {
@@ -88,12 +88,43 @@ function DeviceCard({ device, isSelected, onClick }: { device: DevicePreset; isS
   );
 }
 
+/* ── Category icons (clean line SVGs) ──────────────────────────────── */
+function CategoryIcon({ category }: { category: string }) {
+  const common = {
+    width: 16,
+    height: 16,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.8,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  };
+  switch (category) {
+    case 'android-phone':
+    case 'iphone':
+      return <svg {...common}><rect x="7" y="2" width="10" height="20" rx="2.5" /><line x1="11" y1="18.5" x2="13" y2="18.5" /></svg>;
+    case 'android-tablet':
+    case 'ipad':
+      return <svg {...common}><rect x="4" y="2" width="16" height="20" rx="2.5" /><line x1="11" y1="18.5" x2="13" y2="18.5" /></svg>;
+    case 'smartwatch':
+      return <svg {...common}><rect x="7" y="7" width="10" height="10" rx="2.5" /><path d="M9 7V4.5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 4.5V7" /><path d="M9 17v2.5A1.5 1.5 0 0 0 10.5 21h3a1.5 1.5 0 0 0 1.5-1.5V17" /></svg>;
+    case 'desktop':
+      return <svg {...common}><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>;
+    case 'large-display':
+      return <svg {...common}><rect x="2" y="4" width="20" height="12" rx="2" /><line x1="6" y1="20" x2="18" y2="20" /><line x1="12" y1="16" x2="12" y2="20" /></svg>;
+    case 'tv':
+      return <svg {...common}><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="7.5" y1="22" x2="9.5" y2="19" /><line x1="16.5" y1="22" x2="14.5" y2="19" /></svg>;
+    default:
+      return <svg {...common}><rect x="7" y="2" width="10" height="20" rx="2.5" /><line x1="11" y1="18.5" x2="13" y2="18.5" /></svg>;
+  }
+}
+
 /* ── Category section ──────────────────────────────────────────────── */
 function CategorySection({ category, devices }: { category: string; devices: DevicePreset[] }) {
   const { currentDeviceId, setCurrentDevice } = useStore();
   const [open, setOpen] = useState(false);
   const label = CATEGORY_LABELS[category] ?? category;
-  const emoji = CATEGORY_EMOJI[category] ?? '📱';
 
   return (
     <div style={{ marginBottom: 20 }}>
@@ -102,7 +133,7 @@ function CategorySection({ category, devices }: { category: string; devices: Dev
         onClick={() => setOpen((o) => !o)}
         style={{ width: '100%', background: 'none', border: 'none', padding: '0 0 8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
       >
-        <span style={{ fontSize: 15 }}>{emoji}</span>
+        <span style={{ display: 'flex', alignItems: 'center', color: '#2563eb' }}><CategoryIcon category={category} /></span>
         <span style={{ fontWeight: 600, fontSize: 13, color: '#111827' }}>{label}</span>
         <svg style={{ marginLeft: 'auto', transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }}
           width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5">
@@ -159,7 +190,7 @@ export default function DevicePanel() {
 
   return (
     <div style={{
-      width: 530, flexShrink: 0,
+      width: 'clamp(260px, 30vw, 530px)', flexShrink: 0,
       background: '#fff',
       borderLeft: '1px solid #e5e7eb',
       display: 'flex', flexDirection: 'column',
@@ -172,7 +203,7 @@ export default function DevicePanel() {
             <div style={{ width: 28, height: 28, background: '#2563eb', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
             </div>
-            <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>DevSim</span>
+            <span style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>DeviceLens</span>
           </div>
           <button
             onClick={handleAddCustom}

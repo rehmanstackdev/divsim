@@ -217,7 +217,7 @@ export default function TopToolbar() {
           </svg>
         </div>
         <div className="leading-none">
-          <span className="text-sm font-bold text-surface-100 tracking-tight">DevSim</span>
+          <span className="text-sm font-bold text-surface-100 tracking-tight">DeviceLens</span>
           <span className="block text-[10px] text-surface-70 font-mono leading-none mt-0.5">v1.0</span>
         </div>
       </div>

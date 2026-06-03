@@ -144,9 +144,30 @@ export const useStore = create<AppState & AppActions>()(
         setScreenshotMode: (enabled) => set({ screenshotMode: enabled }),
 
         setUrl: (url) =>
-          set((state) => ({
-            viewports: state.viewports.map((v) => ({ ...v, url })),
-          })),
+          set((state) => {
+            // No viewport created yet (e.g. URL captured on first load before a
+            // device is selected) — create one for the current device so the
+            // URL isn't dropped.
+            if (state.viewports.length === 0) {
+              const device =
+                state.devices.find((d) => d.id === state.currentDeviceId) ??
+                state.devices[0];
+              if (!device) return state;
+              return {
+                viewports: [{
+                  width: device.width,
+                  height: device.height,
+                  pixelRatio: device.pixelRatio,
+                  rotation: 0,
+                  zoom: 100,
+                  url,
+                  isLandscape: false,
+                  deviceId: device.id,
+                }],
+              };
+            }
+            return { viewports: state.viewports.map((v) => ({ ...v, url })) };
+          }),
 
         addToHistory: (deviceId) =>
           set((state) => ({

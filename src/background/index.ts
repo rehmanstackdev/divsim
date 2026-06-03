@@ -1,53 +1,16 @@
-const SIM_ID_KEY = 'simulatorWindowId';
-
-async function getSimulatorWindowId(): Promise<number | null> {
-  const data = await chrome.storage.session.get(SIM_ID_KEY);
-  const id = data[SIM_ID_KEY] as number | undefined;
-  if (!id || id < 0) return null;
-  try {
-    await chrome.windows.get(id);
-    return id;
-  } catch {
-    return null;
-  }
-}
-
-async function saveSimulatorWindowId(id: number | null) {
-  await chrome.storage.session.set({ [SIM_ID_KEY]: id ?? -1 });
-}
-
 chrome.action.onClicked.addListener(async (tab) => {
+  if (tab.id == null) return;
+
   const tabUrl = tab.url ?? '';
+  const simBase = chrome.runtime.getURL('index.html');
 
-  const existingId = await getSimulatorWindowId();
-  if (existingId !== null) {
-    try {
-      await chrome.windows.update(existingId, { focused: true });
-      await chrome.storage.session.set({ pendingUrl: tabUrl });
-      return;
-    } catch {
-      await saveSimulatorWindowId(null);
-    }
-  }
+  // Already on the simulator — nothing to do.
+  if (tabUrl.startsWith(simBase)) return;
 
-  const windowUrl =
-    chrome.runtime.getURL('index.html') +
-    '?tabUrl=' + encodeURIComponent(tabUrl);
-
-  const win = await chrome.windows.create({
-    url: windowUrl,
-    type: 'popup',
-    width: 1280,
-    height: 820,
-    focused: true,
-  });
-
-  await saveSimulatorWindowId(win?.id ?? null);
-});
-
-chrome.windows.onRemoved.addListener(async (id) => {
-  const existingId = await getSimulatorWindowId();
-  if (id === existingId) await saveSimulatorWindowId(null);
+  // Replace the current tab with the simulator, passing along the page URL
+  // it was showing so the device preview auto-loads it (no manual entry).
+  const simUrl = simBase + '?tabUrl=' + encodeURIComponent(tabUrl);
+  await chrome.tabs.update(tab.id, { url: simUrl });
 });
 
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {

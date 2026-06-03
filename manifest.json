@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DevSim - Responsive Simulator",
+  "name": "DeviceLens - Responsive Device Preview",
   "version": "1.0.0",
-  "description": "Responsive multi-device simulator for developers. Preview websites across all devices in real time.",
+  "description": "Preview any website across every device — phones, tablets, watches, desktops and TVs — in real time.",
   "permissions": ["activeTab", "scripting", "storage", "tabs", "windows", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
   "host_permissions": ["<all_urls>"],
   "declarative_net_request": {
@@ -15,7 +15,7 @@
     ]
   },
   "action": {
-    "default_title": "DevSim - Responsive Simulator",
+    "default_title": "DeviceLens - Responsive Device Preview",
     "default_icon": {
       "16":  "icons/icon-16.png",
       "48":  "icons/icon-48.png",
