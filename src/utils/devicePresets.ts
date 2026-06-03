@@ -37,7 +37,7 @@ export const DEVICE_PRESETS: DevicePreset[] = [
   { id: 'ip-xr',          name: 'iPhone XR 2018',        category: 'iphone', width: 414,  height: 896,  pixelRatio: 2,   icon: '📱', userAgent: UA_IPHONE('12_0') },
   { id: 'ip-11',          name: 'iPhone 11',             category: 'iphone', width: 414,  height: 896,  pixelRatio: 2,   icon: '📱', userAgent: UA_IPHONE('13_0') },
   { id: 'ip-11pro',       name: 'iPhone 11 PRO',         category: 'iphone', width: 375,  height: 812,  pixelRatio: 3,   icon: '📱', userAgent: UA_IPHONE('13_0') },
-  { id: 'ip-11promax',    name: 'iPhone 11 PRO MAX',     category: 'iphone', width: 414,  height: 896,  pixelRatio: 3,   icon: '📱', userAgent: UA_IPHONE('13_0') },
+  { id: 'ip-11promax',    name: 'iPhone 11 PRO MAX',     category: 'iphone', width: 414,  height: 896,  pixelRatio: 3,   icon: '📱', frameAsset: '/iphones/iphone11promax.svg', userAgent: UA_IPHONE('13_0') },
   { id: 'ip-12mini',      name: 'iPhone 12 Mini',        category: 'iphone', width: 360,  height: 780,  pixelRatio: 3,   icon: '📱', userAgent: UA_IPHONE('14_0') },
   { id: 'ip-12',          name: 'iPhone 12 (iOS 14)',    category: 'iphone', width: 390,  height: 844,  pixelRatio: 3,   icon: '📱', userAgent: UA_IPHONE('14_0') },
   { id: 'ip-12pro',       name: 'iPhone 12 PRO',         category: 'iphone', width: 390,  height: 844,  pixelRatio: 3,   icon: '📱', userAgent: UA_IPHONE('14_0') },

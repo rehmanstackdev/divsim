@@ -7,6 +7,7 @@ export interface DevicePreset {
   pixelRatio: number;
   userAgent?: string;
   icon: string;
+  frameAsset?: string;
   badge?: 'PRO' | 'NEW' | 'ULTRA';
   isCustom?: boolean;
 }
